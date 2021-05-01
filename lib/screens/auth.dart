@@ -15,7 +15,7 @@ class _AuthPageState extends State<AuthPage>{
       return Padding(padding: EdgeInsets.only(top: 100),
       child: Container(
         child:Align(
-          child: Text("TEST",style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white),),
+          child: Text("TEST  cc",style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white),),
         ),
         ),);
     };
@@ -26,6 +26,7 @@ class _AuthPageState extends State<AuthPage>{
       body: Column(
         children: <Widget>[
           _logo(),
+
         //_form,
         ],
       ),
