@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
             Padding(padding: EdgeInsets.all(50), child: TextField(controller: _controllerPass, decoration: InputDecoration(hintText: "pass"),)),
             ElevatedButton(onPressed:() {authService.registerWhithEmailAndPassword(_controllerEmail.text, _controllerPass.text );}, child: Text("Registr")),
             ElevatedButton(onPressed: (){authService.signInWhithEmailAndPassword(_controllerEmail.text, _controllerPass.text);}, child: Text("LogIn")),
-            ElevatedButton(onPressed: (){authService.logOut();}, child: Text("LogOut")),
+            ElevatedButton(onPressed: (){authService.logOut();}, child: Text("LogOut1")),
 
           ],
         ),
