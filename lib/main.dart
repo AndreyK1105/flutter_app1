@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app1/screens/auth.dart';
+//import 'package:flutter_app1/screens/auth.dart';
 import 'package:flutter_app1/screens/landing.dart';
-import 'package:flutter_app1/screens/test.dart';
+//import 'package:flutter_app1/screens/test.dart';
 import 'package:flutter_app1/service/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget{
     builder: (context, snapshot){
          if(snapshot.hasError){
            print("error");
-           return Text ('error');
+           return Text ('error1');
 
          }
          if(snapshot.connectionState==ConnectionState.done){
