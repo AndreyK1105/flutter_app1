@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/service/auth.dart';
+import 'package:flutter_app1/service/servDatabase.dart';
 
 class AuthPage extends StatefulWidget{
   @override
@@ -10,6 +11,7 @@ class AuthPage extends StatefulWidget{
 
 class _AuthPageState extends State<AuthPage>{
 final TextEditingController _editingController=TextEditingController();
+final ServDatabase servDatabase = ServDatabase();
   @override
   Widget build(BuildContext context) {
     Widget _logo() {
@@ -22,6 +24,7 @@ final TextEditingController _editingController=TextEditingController();
               TextField(controller:_editingController,
               decoration: InputDecoration(hintText: "descr"),),
               ElevatedButton(onPressed: (){
+                servDatabase.basePut(_editingController.text);
 
               }, child: Text("go"))
 
