@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/service/auth.dart';
 import 'package:flutter_app1/service/servDatabase.dart';
+import 'package:flutter_app1/service/word.dart';
 
 class AuthPage extends StatefulWidget{
   @override
@@ -24,7 +25,12 @@ final ServDatabase servDatabase = ServDatabase();
               TextField(controller:_editingController,
               decoration: InputDecoration(hintText: "descr"),),
               ElevatedButton(onPressed: (){
-                servDatabase.basePut(_editingController.text);
+                Word word= Word();
+                word.english="book";
+                word.russia="sd";
+                word.transcr="df";
+                word.id=1;
+                servDatabase.basePut(word);
 
               }, child: Text("go"))
 
