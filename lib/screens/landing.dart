@@ -1,6 +1,3 @@
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app1/screens/auth.dart';
 import 'package:flutter_app1/service/user.dart';
@@ -15,11 +12,10 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final User1 user1=Provider.of<User1>(context);
-   final  bool isLoggetIn = user1!=null;
+    final  bool isLoggetIn = user1!=null;
     return
 
-               isLoggetIn ? HomePage(): AuthPage();
-          }
+      isLoggetIn ? AuthPage():HomePage();
+  }
 
-          }
-
+}
