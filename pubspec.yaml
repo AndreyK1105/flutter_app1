@@ -27,6 +27,8 @@ dependencies:
   firebase_database: ^6.1.2
   provider: ^5.0.0
   toast: ^0.1.5
+  sqflite: ^2.0.0+3
+  path_provider: ^2.0.1
 
   flutter:
     sdk: flutter

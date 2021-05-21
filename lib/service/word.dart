@@ -1,16 +1,49 @@
+import 'dart:core';
+
+import 'dart:core';
+
 class Word {
+  static String table="word_item";
   int id=0;
-   String _english="--";
-   String _russia="--";
-   String _transcr="--";
+   String english="--";
+   String russia="--";
+   String transcr="--";
+   bool complete;
 
 
 
- // Word (this._english, this._russia,this._transcr, this.id){
 
- //  }
+  Word ({this.id, this.english, this.russia, this.transcr, this.complete});
 
-  set english(String value) {
+  Word.fromJson (Map<String, dynamic> data ){
+    english=data["inglish"];
+    russia= data["russia"];
+    transcr=data["transcr"];
+  }
+
+
+  
+  Map<String, dynamic> toMap(){
+    Map<String, dynamic> map = {
+      "english": english,
+      "russia": russia,
+      "transcr": transcr,
+    "complete": complete
+    };
+    if (id!=null){map["id"]=id;}
+    return map;
+ }
+
+ static Word fromMap(Map<String, dynamic>map){
+    return Word(
+      id: map["id"],
+      english:map["english"],
+      russia: map["russia"],
+      transcr: map["transcr"],
+      complete: map["complete"]==1
+    );
+ }
+  /*set english(String value) {
     _english = value;
   }
 
@@ -27,4 +60,6 @@ class Word {
   set transcr(String value) {
     _transcr = value;
   }
+  */
+
 }
