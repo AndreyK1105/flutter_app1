@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app1/screens/auth.dart';
 import 'package:flutter_app1/screens/landing.dart';
 import 'package:flutter_app1/service/auth.dart';
+import 'package:flutter_app1/service/db.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Db.init();
   await Firebase.initializeApp();
   runApp(MyInitFirebase());
 }
