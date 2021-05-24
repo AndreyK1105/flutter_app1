@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/screens/listDb.dart';
 import 'package:flutter_app1/service/auth.dart';
 import 'package:flutter_app1/service/servDatabase.dart';
 import 'package:flutter_app1/service/word.dart';
@@ -78,6 +79,15 @@ final ServDatabase servDatabase = ServDatabase();
                 _transcrController.clear();
 
               }, child: Text("go")),
+              ElevatedButton(onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ListDb()),
+                );
+
+
+
+              }, child: Text("listDb")),
 
 
             ],

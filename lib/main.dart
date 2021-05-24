@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app1/screens/landing.dart';
 //import 'package:flutter_app1/screens/test.dart';
 import 'package:flutter_app1/service/auth.dart';
+import 'package:flutter_app1/service/db.dart';
 import 'package:provider/provider.dart';
 
 import 'service/user.dart';
 
-void main() {
+Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Db.init();
   runApp(
     MyApp());}
 
