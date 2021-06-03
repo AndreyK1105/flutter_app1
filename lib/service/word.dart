@@ -43,6 +43,9 @@ class Word {
       complete: map["complete"]==1
     );
  }
+  set english1(String value) {
+    english = value;
+  }
   /*set english(String value) {
     _english = value;
   }

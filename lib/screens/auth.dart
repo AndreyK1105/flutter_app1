@@ -107,7 +107,7 @@ final ServDatabase servDatabase = ServDatabase();
         children: <Widget>[
           _logo(),
 
-          _list(),
+         // _list(),
 
 
 
