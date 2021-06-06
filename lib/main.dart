@@ -1,66 +1,63 @@
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app1/screens/auth.dart';
+//import 'package:flutter_app1/screens/auth.dart';
 import 'package:flutter_app1/screens/landing.dart';
+//import 'package:flutter_app1/screens/test.dart';
 import 'package:flutter_app1/service/auth.dart';
 import 'package:flutter_app1/service/db.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+import 'service/user.dart';
+
+Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
   await Db.init();
-  await Firebase.initializeApp();
-  runApp(MyInitFirebase());
-}
-class MyInitFirebase extends StatelessWidget {
-  final Future <FirebaseApp> _initialis = Firebase.initializeApp();
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return StreamProvider.value(
-      value: AuthService().curentUser,
-      child: MaterialApp(
-          theme: ThemeData(
-            textTheme: TextTheme(bodyText2: TextStyle(color: Colors.deepOrange,
-                fontSize: 23,
-                fontWeight: FontWeight.bold)),
-            primaryColor: Colors.greenAccent,
-            splashColor: Colors.amber,
-
-          ),
-          themeMode: ThemeMode.system,
-          title: "hkc",
-          home: Scaffold(
-              body:
-            FutureBuilder(
-               future: _initialis,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    print("error");
-                    return Text("Error");
-                  }
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return MyApp();
-                  }
-                  return Container(child: Text("on"),);
-                },
-              )
+  runApp(
+      MyApp());}
 
 
-          )
-      ),
-    );
-  }
-}
 
 
 class MyApp extends StatelessWidget{
-
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-  return LandingPage();
+    return  FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot){
+          if(snapshot.hasError){
+            print("error");
+            return Text ('error1');
 
+          }
+          if(snapshot.connectionState==ConnectionState.done){
+            return StreamProvider<User1>.value(
+              value: AuthService().curentUser,
+
+
+              child: MaterialApp(
+                  theme: ThemeData(
+                    textTheme: TextTheme(
+                        bodyText2: TextStyle(color: Colors.deepOrange,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold)),
+                    primaryColor: Colors.greenAccent,
+                    splashColor: Colors.amber,
+
+                  ),
+                  themeMode: ThemeMode.system,
+                  title: "hkc",
+                  home: LandingPage()
+
+              ),
+            );
+          }
+
+          return
+            Container(child: Text("load      LOAD", textDirection: TextDirection.ltr, style: TextStyle(fontSize: 35),));
+
+        }
+    );
   }
 }

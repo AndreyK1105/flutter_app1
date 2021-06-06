@@ -8,7 +8,7 @@ class ServDatabase{
   final CollectionReference firestore =FirebaseFirestore.instance.collection("word");
 
 
-  Future <void> basePut (String word, String russia, String transcr){
+  Future <void> baseCloudPut (String word, String russia, String transcr){
     return
         firestore.add({"inglish": word, "russia": russia, "transcr": transcr})
         .then((value) => print("word added"))
