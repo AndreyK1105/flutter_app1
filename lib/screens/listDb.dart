@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/screens/workout.dart';
 import 'package:flutter_app1/service/db.dart';
 import 'package:flutter_app1/service/word.dart';
 
@@ -16,35 +19,61 @@ class  _MyHomePageState extends State <ListDb>{
   String _russia;
   String _transcr;
   List <Word> _tasks=[];
-  TextStyle _style = TextStyle(color: Colors.white, fontSize: 24);
+  TextStyle _style = TextStyle(color: Colors.amberAccent, fontSize: 17);
+  TextStyle _style1 = TextStyle(color: Colors.white, fontSize: 20);
 
   Widget format(Word item){
+    if (item.english == null){item.english="не задано";}
+    if (item.russia == null){item.russia="не задано";}
+    if (item.transcr == null){item.transcr="не задано";}
     return
-       Row(
-         children: [
-           Column(
-            children: [
-              Align(alignment: Alignment.centerLeft,
-                  child: Text("id:"+item.id.toString(), style: _style,)),
-              Align(alignment: Alignment.centerLeft,
-                  child: Text("english: " +item.english, style: _style,)),
-              Align(alignment: Alignment.centerLeft,
-                  child: Text("russia:"+item.russia,style: _style,)),
-              Align(alignment: Alignment.centerLeft,
-                  child: Text("transcr:"+item.transcr,style: _style,)),
-              Text(""),
-            ],
-      ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(onPressed:() {_delete(item);}, child: Align(alignment: Alignment.centerRight, child: Text("delete"))),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: Column( crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Text("id: ", style: _style,),
+                    Text(item.id.toString(), style: _style1,),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("english: " , style: _style,),
+                    Text(item.english, style: _style1,),
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Text("russia:  ",style: _style,),
+                    Text(item.russia,style: _style1,),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("transcr:",style: _style,),
+                    Text(item.transcr,style: _style1,),
+                  ],
+                ),
+                // Text(""),
+              ],
             ),
-           Padding(
-             padding: const EdgeInsets.all(8.0),
-             child: ElevatedButton(onPressed:() {_update1(context, item);}, child: Align(alignment: Alignment.centerRight, child: Text("update"))),
-           )
-         ],
-       );
+          ),
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: ElevatedButton(onPressed:() {_delete(item);},style: ButtonStyle
+              (backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                minimumSize:MaterialStateProperty.all(Size(60, 60)), padding: MaterialStateProperty.all(EdgeInsets.zero)  ),child:  Text("delete")),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: ElevatedButton(onPressed:() {_update1(context, item);}, style: ButtonStyle
+              (minimumSize:MaterialStateProperty.all(Size(60,60)), padding: MaterialStateProperty.all(EdgeInsets.zero) ), child: Align(alignment: Alignment.centerRight, child: Text("update"))),
+          )
+        ],
+      );
 
   }
   List<Widget>get _items => _tasks.map((item) => format(item)).toList();
@@ -64,8 +93,8 @@ class  _MyHomePageState extends State <ListDb>{
 
   }
   void _delete(Word item) async {
-   await Db.delete(Word.table, item);
-   refresh();
+    await Db.delete(Word.table, item);
+    refresh();
   }
   void _save() async {
     Navigator.of(context).pop();
@@ -117,7 +146,7 @@ class  _MyHomePageState extends State <ListDb>{
                     ),
                     TextField(
                       autofocus: false,
-                      decoration: InputDecoration(labelText: 'Перевод на русский', hintText: "item.russia"),
+                      decoration: InputDecoration(labelText: 'Перевод на русский', counterText: item.russia, hintText: item.russia),
                       onChanged: (value) { item.russia=value; },
                     ),
                     TextField(
@@ -142,39 +171,39 @@ class  _MyHomePageState extends State <ListDb>{
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Create New Task"),
-            actions: <Widget>[
-              TextButton(
-                  child: Text('Cancel'),
-                  onPressed: () => Navigator.of(context).pop()
-              ),
-              TextButton(
-                  child: Text('Save'),
-                  onPressed: () => _save()
+              title: Text("Create New Task"),
+              actions: <Widget>[
+                TextButton(
+                    child: Text('Cancel'),
+                    onPressed: () => Navigator.of(context).pop()
+                ),
+                TextButton(
+                    child: Text('Save'),
+                    onPressed: () => _save()
+                )
+              ],
+              content:
+              Column(
+                  children:[
+                    TextField(
+                      autofocus: true,
+                      decoration: InputDecoration(labelText: 'English word', hintText: 'english'),
+                      onChanged: (value) { _english = value; },
+
+                    ),
+                    TextField(
+                      autofocus: false,
+                      decoration: InputDecoration(labelText: 'Перевод на русский', hintText: 'russia'),
+                      onChanged: (value) { _russia=value; },
+                    ),
+                    TextField(
+                      autofocus: false,
+                      decoration: InputDecoration(labelText: 'транскрипция', hintText: 'transcr'),
+                      onChanged: (value) { _transcr=value; },
+                    ),
+
+                  ]
               )
-            ],
-            content:
-            Column(
-          children:[
-            TextField(
-              autofocus: true,
-              decoration: InputDecoration(labelText: 'English word', hintText: 'english'),
-              onChanged: (value) { _english = value; },
-
-            ),
-          TextField(
-          autofocus: false,
-          decoration: InputDecoration(labelText: 'Перевод на русский', hintText: 'russia'),
-          onChanged: (value) { _russia=value; },
-          ),
-            TextField(
-              autofocus: false,
-              decoration: InputDecoration(labelText: 'транскрипция', hintText: 'transcr'),
-              onChanged: (value) { _transcr=value; },
-            ),
-
-        ]
-            )
           );
         }
     );
@@ -186,18 +215,29 @@ class  _MyHomePageState extends State <ListDb>{
 
 
     return Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar( title: Text(widget.title) ),
+        backgroundColor: Colors.grey,
+        appBar: AppBar( title: Text(widget.title), toolbarHeight: 40,actions: [IconButton(icon: Icon(Icons.auto_stories),
+          onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Workout()),
+          );},)], ),
         body: Align(alignment: Alignment.centerLeft,
-          child: Padding( padding: EdgeInsets.fromLTRB(1, 5, 1, 5),
-              child:ListView(children: _items),
+          child: Padding( padding: EdgeInsets.fromLTRB(3, 5, 1, 5),
+            child:ListView.builder(
+                itemCount: _items.length,
+                itemBuilder:(BuildContext context, int index){
+                  return _items[index];
+                }
           ),
+        ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () { _create(context); },
           tooltip: 'New TODO',
           child: Icon(Icons.library_add),
-        )
+        ),
+
     );
   }
 
