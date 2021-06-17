@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/screens/workout.dart';
@@ -57,6 +58,13 @@ class  _MyHomePageState extends State <ListDb>{
                     Text(item.transcr,style: _style1,),
                   ],
                 ),
+                Row(
+                  children: [
+                    Text("Data Add:",style: _style,),
+                    Text(DateTime.fromMillisecondsSinceEpoch(item.dataAdd).toLocal().toString().substring(0,10),style: _style1,),
+
+                  ],
+                ),
                 // Text(""),
               ],
             ),
@@ -103,6 +111,7 @@ class  _MyHomePageState extends State <ListDb>{
         english: _english,
         russia: _russia,
         transcr: _transcr,
+        dataAdd: DateTime.now().millisecondsSinceEpoch,
         complete: false
     );
     await Db.insert(Word.table, item);

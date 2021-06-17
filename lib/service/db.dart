@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 abstract class Db{
   static Database _db;
   static int get _version=> 1;
+  static String english='english';
 
   static Future <void> init()async{
     if(_db!=null){print("**************db!=null*******************"); return;}
@@ -18,8 +19,8 @@ abstract class Db{
     }
   }
   static void onCreate(Database db, int version) async=>
-      await db.execute('CREATE TABLE word_item (id INTEGER PRIMARY KEY NOT NULL, english STRING, russia STRING, transcr STRING, complete BOOLEAN)');
-  static Future<List<Map<String, dynamic>>> query(String table) async => _db.query(table);
+      await db.execute('CREATE TABLE word_item (id INTEGER PRIMARY KEY NOT NULL, english STRING, russia STRING, transcr STRING, dataAdd INTEGER, rating INTEGER, lesson INTEGER, complete BOOLEAN)');
+  static Future<List<Map<String, dynamic>>> query(String table) async => _db.query(table  );
 
   static Future<int> insert(String table, Word word) async =>
       await _db.insert(table, word.toMap());

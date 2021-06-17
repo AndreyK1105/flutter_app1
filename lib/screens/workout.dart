@@ -1,11 +1,20 @@
+
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class Workout extends StatefulWidget {
+
+
   @override
   _Workout  createState() =>_Workout();
 }
   class _Workout extends State <Workout>{
+
     bool _selected=true;
     bool _choceEngl=true;
     bool _choceRus=false;
@@ -13,14 +22,57 @@ class Workout extends StatefulWidget {
   String _langWorkout="eng";
   bool _englishWorkout=true;
   bool _rusianWorkout=false;
+  File _image;
+  File _image2;
+  final picker= ImagePicker();
+  String path;
+    String path2;
+
+ //
+
+
+
+    Future<String> get _localPath async {
+      final directory = await getApplicationDocumentsDirectory();
+      path2=directory.path+'/image.jpg';
+      print(directory.path);
+
+      return path2;
+    }
+
+  Future getImage() async{
+final picker=ImagePicker();
+    final directory = await getApplicationDocumentsDirectory();
+    final path =directory.path;
+    print(directory.path);
+
+    final  pickedFile= await picker.getImage(source: ImageSource.camera);
+
+     File  newImage= await File(pickedFile.path).copy("$path/image.jpg");
+     setState(() {
+       if (pickedFile!=null){
+         _image=File(pickedFile.path);
+         _image2=newImage;
+         String _name=extension(pickedFile.path);
+         print('name ********: $_name');
+       }
+       else {
+         print ('no file');
+       }
+     });
+
+  }
+
   void _saveLang(){
-    Navigator.of(context).pop() ;
+    //Navigator.of(context).pop() ;
 
   }
 
 
   @override
   Widget build(BuildContext context) {
+
+
 
     Widget _choiceEngl(){return
       ChoiceChip(label: Text("English"),
@@ -90,6 +142,8 @@ class Workout extends StatefulWidget {
       return Text("Text");
     }
 
+
+
     // TODO: implement build
   int  _value=2;
 
@@ -122,31 +176,36 @@ class Workout extends StatefulWidget {
         Text(_langWorkout),
         IconButton(icon: Icon(Icons.not_started_outlined), onPressed: (){}),
       ],),
-      body:  Wrap(
-    children: List<Widget>.generate(
-      4,
-          (int index) {
+      body:  Column(
+        children: [
+          Row(
+            children: [
+              Text('word'),
+              IconButton(icon: Icon(Icons.edit), onPressed: (){})
+            ],
+          ),
+          Row(
+            children:[
+             Container(
+               width: 300, height: 200,
+               child: _image == null
+                 ? Center(child: Text('No image selected.'))
+                 : Image.file(_image),),
+              IconButton(icon: Icon(Icons.edit), onPressed: (){getImage();}),
+    ]
+          ),
+          Container(width: 300, height: 200,
+            child:_image2==null?
+            Text('w'): Image.file(_image2),
+            // ,
 
-        return ChoiceChip(
-          label: Text('Item $index'),
-          selected: _selected,
-          onSelected: (bool selected) {
-            setState(() {
-              print("_selected$_selected");
-              _selected=!_selected;
 
-              _value = selected ? index : null;
 
-              print("_selected$_selected");
-             // if(_selected==true){_selected=!_selected; print("_selected$_selected");}
+                   //
+          )
 
-            });
-          },
-          selectedColor: Colors.blue,
-        );
-      },
-    ).toList(),
-    )
+        ],
+      )
 
 
     );
