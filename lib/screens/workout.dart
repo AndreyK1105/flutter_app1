@@ -184,7 +184,22 @@ final picker=ImagePicker();
               IconButton(icon: Icon(Icons.edit), onPressed: (){})
             ],
           ),
-          Row(
+         Container(height: 100,),
+         Row(
+           children: [
+             Expanded(child: TextField()),
+             ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.wb_incandescent_outlined), label: Text('?'))
+           ],
+         ),
+          Container(height: 100,),
+         Row(
+           children: [
+             ElevatedButton(onPressed: (){}, child: Text("Знаю")),
+             Container(width: 150,),
+             ElevatedButton(onPressed: (){}, child: Text("НеЗнаю")),
+           ],
+         ),
+         /* Row(
             children:[
              Container(
                width: 300, height: 200,
@@ -194,6 +209,9 @@ final picker=ImagePicker();
               IconButton(icon: Icon(Icons.edit), onPressed: (){getImage();}),
     ]
           ),
+
+          */
+
           Container(width: 300, height: 200,
             child:_image2==null?
             Text('w'): Image.file(_image2),

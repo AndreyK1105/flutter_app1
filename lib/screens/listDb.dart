@@ -16,10 +16,12 @@ class ListDb extends StatefulWidget {
 }
 class  _MyHomePageState extends State <ListDb>{
 
-  String _english;
+  String _english="tt";
   String _russia;
   String _transcr;
+  String _titleAppbar="";
   List <Word> _tasks=[];
+  Word _task1;
   TextStyle _style = TextStyle(color: Colors.amberAccent, fontSize: 17);
   TextStyle _style1 = TextStyle(color: Colors.white, fontSize: 20);
 
@@ -85,6 +87,8 @@ class  _MyHomePageState extends State <ListDb>{
 
   }
   List<Widget>get _items => _tasks.map((item) => format(item)).toList();
+  //Word get _items1 (int i)=>_tasks[i];
+
 
   @override
   void initState() {
@@ -97,6 +101,10 @@ class  _MyHomePageState extends State <ListDb>{
 
     List<Map<String, dynamic>> _results = await Db.query(Word.table);
     _tasks = _results.map((item) => Word.fromMap(item)).toList();
+    _task1=_tasks[_tasks.length-2];
+
+   _titleAppbar=_task1.english==null?"null":_task1.english;
+
     setState(() { });
 
   }
@@ -147,18 +155,21 @@ class  _MyHomePageState extends State <ListDb>{
               content:
               Column(
                   children:[
-                    TextField(
+                    TextFormField(
+                      initialValue: item.english,
                       autofocus: true,
-                      decoration: InputDecoration(labelText: 'English word', hintText: item.english),
+                      decoration: InputDecoration(labelText: 'English word'),
                       onChanged: (value) { item.english = value; },
 
                     ),
-                    TextField(
+                    TextFormField(
                       autofocus: false,
+                      initialValue: item.russia,
                       decoration: InputDecoration(labelText: 'Перевод на русский', counterText: item.russia, hintText: item.russia),
                       onChanged: (value) { item.russia=value; },
                     ),
-                    TextField(
+                    TextFormField(
+                      initialValue: item.transcr,
                       autofocus: false,
                       decoration: InputDecoration(labelText: 'транскрипция', hintText: item.transcr),
                       onChanged: (value) { item.transcr=value; },
@@ -225,7 +236,7 @@ class  _MyHomePageState extends State <ListDb>{
 
     return Scaffold(
         backgroundColor: Colors.grey,
-        appBar: AppBar( title: Text(widget.title), toolbarHeight: 40,actions: [IconButton(icon: Icon(Icons.auto_stories),
+        appBar: AppBar( title: Text("ret $_titleAppbar"), toolbarHeight: 40,actions: [IconButton(icon: Icon(Icons.auto_stories),
           onPressed: (){
           Navigator.push(
             context,
@@ -233,12 +244,19 @@ class  _MyHomePageState extends State <ListDb>{
           );},)], ),
         body: Align(alignment: Alignment.centerLeft,
           child: Padding( padding: EdgeInsets.fromLTRB(3, 5, 1, 5),
-            child:ListView.builder(
-                itemCount: _items.length,
-                itemBuilder:(BuildContext context, int index){
-                  return _items[index];
-                }
-          ),
+            child:
+
+
+                    ListView.builder(
+                        itemCount: _items.length,
+                        itemBuilder:(BuildContext context, int index){
+                          return _items[index];
+                        }
+
+
+            ),
+
+
         ),
         ),
         floatingActionButton: FloatingActionButton(
