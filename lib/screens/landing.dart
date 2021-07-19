@@ -7,6 +7,7 @@ import 'package:flutter_app1/service/user.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';
+import 'listDb.dart';
 
 class LandingPage extends StatelessWidget {
 
@@ -18,7 +19,8 @@ class LandingPage extends StatelessWidget {
    final  bool isLoggetIn = user1!=null;
     return
 
-               isLoggetIn ? AuthPage():HomePage();
+      isLoggetIn ? ListDb():HomePage();
+      //isLoggetIn ? AuthPage():HomePage();
           }
 
           }

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/service/db.dart';
+import 'package:flutter_app1/service/word.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -27,8 +29,48 @@ class Workout extends StatefulWidget {
   final picker= ImagePicker();
   String path;
     String path2;
+    List <Word> _tasks;
+    int leght;
+    List <int> indexRnd;
+    List <int> rndIndex;
+    int indexWork=0;
 
  //
+    @override
+    initState() {
+      refreshDb();
+      super.initState();
+    }
+   void refreshDb()async{
+      List<Map<String, dynamic>> _results = await Db.query(Word.table);
+      _tasks = _results.map((item) => Word.fromMap(item)).toList();
+      leght= _tasks.length;
+      setState(() {
+        refreshIndexRnd();
+      });
+
+
+
+    }
+
+    void refreshIndexRnd() {
+      indexRnd = List.filled(leght, null);
+      rndIndex = List.filled(leght, null);
+      Random random = Random();
+      int index;
+      for (int i = 0; i < leght; i++) {
+        do {
+          index = random.nextInt(leght);
+        }
+        while (rndIndex[index] != null);
+        indexRnd[i] = index;
+        rndIndex[index] = i;
+
+        print('i==$i  Index==$index');
+      }
+    }
+
+
 
 
 
@@ -72,7 +114,30 @@ final picker=ImagePicker();
   @override
   Widget build(BuildContext context) {
 
+    Widget wordQueschon () {
+      if (_tasks == null) {
+        return Text('null');
+      }
+      else {
 
+
+        if (_langWorkout=="eng"){
+          return Text(_tasks[rndIndex[indexWork]].english);
+        }else if(_langWorkout=="rus"){
+          Text(_tasks[rndIndex[indexWork]].russia);
+        }else if(_langWorkout=="eng/rus") {
+          Random rnd = Random();
+          if (rnd.nextInt(2) == 0) {
+            return Text(_tasks[rndIndex[indexWork]].russia);
+          }
+          else {
+            return Text(_tasks[rndIndex[indexWork]].english);
+          }
+        }
+        return Text(_tasks[rndIndex[indexWork]].russia);
+
+      }
+    }
 
     Widget _choiceEngl(){return
       ChoiceChip(label: Text("English"),
@@ -85,11 +150,13 @@ final picker=ImagePicker();
             _langWorkout="eng";
             Navigator.of(context).pop();
 
-            print(_choceEngl);
+            print('_choceEngl$_choceEngl');
           });
         },
       );
     }
+
+
     Widget _choiceRus(){return
       ChoiceChip(label: Text("Русский"), selected: _choceRus,
         onSelected: (value){
@@ -99,7 +166,7 @@ final picker=ImagePicker();
             if(_choceEnglRus) _choceEnglRus=!_choceEnglRus;
             _langWorkout="rus";
             Navigator.of(context).pop();
-            print(_choceEngl);
+            print('_choceEngl$_choceEngl');
           });
         },
       );
@@ -114,7 +181,7 @@ final picker=ImagePicker();
             _langWorkout="eng/rus";
             Navigator.of(context).pop();
 
-            print(_choceEngl);
+            print('_choceEngl$_choceEngl');
           });
         },
       );
@@ -174,14 +241,24 @@ final picker=ImagePicker();
           },
         ),
         Text(_langWorkout),
-        IconButton(icon: Icon(Icons.not_started_outlined), onPressed: (){}),
+        IconButton(icon: Icon(Icons.not_started_outlined), onPressed: (){
+          setState(() {
+            refreshIndexRnd();
+            indexWork=0;
+          });
+
+
+        }),
       ],),
       body:  Column(
         children: [
           Row(
             children: [
-              Text('word'),
-              IconButton(icon: Icon(Icons.edit), onPressed: (){})
+              wordQueschon(),
+
+
+              IconButton(icon: Icon(Icons.edit), onPressed: (){}),
+              Text(indexWork.toString())
             ],
           ),
          Container(height: 100,),
@@ -194,7 +271,13 @@ final picker=ImagePicker();
           Container(height: 100,),
          Row(
            children: [
-             ElevatedButton(onPressed: (){}, child: Text("Знаю")),
+             ElevatedButton(onPressed: (){
+               setState(() {
+                 if (indexWork<leght-1){
+                   indexWork++;
+                 }
+               });
+             }, child: Text("Знаю")),
              Container(width: 150,),
              ElevatedButton(onPressed: (){}, child: Text("НеЗнаю")),
            ],
