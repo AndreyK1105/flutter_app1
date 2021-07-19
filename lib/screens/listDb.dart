@@ -17,11 +17,11 @@ class ListDb extends StatefulWidget {
 class  _MyHomePageState extends State <ListDb>{
 
   String _english="tt";
-  String _russia;
-  String _transcr;
+  late String _russia;
+  late String _transcr;
   String _titleAppbar="";
   List <Word> _tasks=[];
-  Word _task1;
+  late Word _task1;
   TextStyle _style = TextStyle(color: Colors.amberAccent, fontSize: 17);
   TextStyle _style1 = TextStyle(color: Colors.white, fontSize: 20);
 

@@ -24,15 +24,15 @@ class Workout extends StatefulWidget {
   String _langWorkout="eng";
   bool _englishWorkout=true;
   bool _rusianWorkout=false;
-  File _image;
-  File _image2;
+  late File _image;
+  late File _image2;
   final picker= ImagePicker();
-  String path;
-    String path2;
-    List <Word> _tasks;
-    int leght;
-    List <int> indexRnd;
-    List <int> rndIndex;
+  late String path;
+    late String path2;
+    late List <Word> _tasks;
+    late int leght;
+     List <int> ?indexRnd;
+    late List <int> rndIndex;
     int indexWork=0;
 
  //
@@ -54,7 +54,7 @@ class Workout extends StatefulWidget {
     }
 
     void refreshIndexRnd() {
-      indexRnd = List.filled(leght, null);
+      indexRnd = List.filled(leght, 0);
       rndIndex = List.filled(leght, null);
       Random random = Random();
       int index;

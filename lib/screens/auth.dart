@@ -33,7 +33,7 @@ final ServDatabase servDatabase = ServDatabase();
             }
             return ListView(
               shrinkWrap: true,
-              children: snapshot.data.docs.map((DocumentSnapshot document){
+              children: snapshot.data!.docs.map((DocumentSnapshot document){
                 return ListTile (
                   title: Text(document.get("inglish")),
                   subtitle: Text(document.get("russia")),
