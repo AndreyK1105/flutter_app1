@@ -1,11 +1,16 @@
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
 
 class MyApp1 extends StatelessWidget{
-  final Future <FirebaseApp> _initializition = Firebase.initializeApp();
+   int counter=0;
+
+  //final Future <FirebaseApp> _initializition = Firebase.initializeApp();
   //FirebaseApp app ;
 
 
@@ -13,87 +18,64 @@ class MyApp1 extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
 
-      home:   Container(
+    return  MaterialApp(
 
-          child:   Scaffold(
 
-            body: Column(
+        home:   Container(
 
-              children: [
-                Container(width: 0, height: 100,),
-                Text("FFF", style: TextStyle(fontSize: 30),),
+            child:   Scaffold(
 
-                FutureBuilder(
+              body: Column(
 
-                    future: _initializition,
 
-                    builder: (context, snapshot){
-
-                      if(snapshot.hasError){
-
-                        print("hasError");
-                        Text ("error");
+                children: [
+                  Container(width: 0, height: 100,),
+                Text("Counter= ${context.watch<CounterModel>().counter}", style: TextStyle(fontSize: 30),),
+                  //CountText(),
 
 
 
-                      }
+                  ElevatedButton(onPressed: (){
+                    context.read<CounterModel>().addCounter();
 
-                      if(snapshot.connectionState== ConnectionState.done){
+                   // var  _counterModel =Provider.of<CounterModel>(context);
 
-                        print("done");
-                        return
-                          Container(
+                    //_counterModel.addCounter();
 
-                            child: Text("Done"),
+                    }, child: Text("counter++ "),),
 
-                          );
+                  ElevatedButton(onPressed: (){
+                    showDialog();
 
-                      }
-                      return
-                        Container(
+                  }, child: Text("creatUser")),
+                  ElevatedButton(onPressed: (){
 
-                          child: Text("Test"),
-
-                        );
-
-                    }
-
-                ),
+                  }, child: Text("in")),
                 ElevatedButton(onPressed: (){
-                 //final FirebaseApp app = FirebaseApp (name:"default");
-                  _base();
-                  }, child: Text("auth instanse"),),
 
-                ElevatedButton(onPressed: (){
-                  final FirebaseAuth auth =FirebaseAuth.instance;
-                  auth.createUserWithEmailAndPassword(email: "email@mail.ru", password: "1234Qwer");
-                }, child: Text("creatUser")),
-                ElevatedButton(onPressed: (){
-                  final FirebaseAuth auth =FirebaseAuth.instance;
-                  auth.signInWithEmailAndPassword(email: "email@mail.ru", password: "1234Qwer");
-                }, child: Text("in")),
-              ElevatedButton(onPressed: (){
-      final FirebaseAuth auth =FirebaseAuth.instance;
-      auth.signOut();
-      }, child: Text("Out")),
+        }, child: Text("Out")),
 
 
 
 
-              ],
+                ],
 
-            ),
+              ),
 
-          )
+            )
 
-      ),
-    );
+        ),
+      );
+
 
 
 
   }
+  void showDialog(){
+
+
+}
   Future<void> _base() async {
     //final FirebaseApp app1 = await Firebase.initializeApp();
 
@@ -106,4 +88,28 @@ class MyApp1 extends StatelessWidget{
 
   }
 
+}
+class CountText extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return
+      Text("Counter= ${context.watch<CounterModel>().counter}", style: TextStyle(fontSize: 30),);
+   // Consumer<CounterModel>(builder: (context, counter, child) {
+     // return Text("Counter= ${counter._counter}", style: TextStyle(fontSize: 30),);
+    //});
+
+  }
+  
+
+}
+class CounterModel with ChangeNotifier {
+
+  int _counter = 1;
+
+  int get counter => _counter;
+
+  void addCounter() {
+    _counter++;
+    notifyListeners();
+  }
 }

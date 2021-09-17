@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/service/db.dart';
 import 'package:flutter_app1/service/word.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -32,8 +33,16 @@ class Workout extends StatefulWidget {
     late List <Word> _tasks;
     late int leght;
      List <int> ?indexRnd;
-    late List <int> rndIndex;
+     List <int>? rndIndex;
     int indexWork=0;
+    TextEditingController answerController = TextEditingController();
+
+    late String question;
+    late String answer;
+
+    int ratingMax=10;
+
+    RefreshModel _refreshModel= RefreshModel();
 
  //
     @override
@@ -55,26 +64,33 @@ class Workout extends StatefulWidget {
 
     void refreshIndexRnd() {
       indexRnd = List.filled(leght, 0);
-      rndIndex = List.filled(leght, null);
+      rndIndex = List.filled(leght, -1);
       Random random = Random();
       int index;
       for (int i = 0; i < leght; i++) {
         do {
           index = random.nextInt(leght);
         }
-        while (rndIndex[index] != null);
-        indexRnd[i] = index;
-        rndIndex[index] = i;
+        while (rndIndex![index] != -1);
+        indexRnd![i] = index;
+        rndIndex![index] = i;
 
         print('i==$i  Index==$index');
       }
     }
 
+    void _saveupdate(Word item) async {
+
+
+      await Db.update(Word.table, item);
+      print("rating:${item.rating}");
+      //setState(() => { });
+      //refresh();
+    }
 
 
 
-
-    Future<String> get _localPath async {
+    /*Future<String> get _localPath async {
       final directory = await getApplicationDocumentsDirectory();
       path2=directory.path+'/image.jpg';
       print(directory.path);
@@ -82,7 +98,9 @@ class Workout extends StatefulWidget {
       return path2;
     }
 
-  Future getImage() async{
+     */
+
+ /* Future getImage() async{
 final picker=ImagePicker();
     final directory = await getApplicationDocumentsDirectory();
     final path =directory.path;
@@ -90,7 +108,7 @@ final picker=ImagePicker();
 
     final  pickedFile= await picker.getImage(source: ImageSource.camera);
 
-     File  newImage= await File(pickedFile.path).copy("$path/image.jpg");
+     File  newImage= await File(pickedFile!.path).copy("$path/image.jpg");
      setState(() {
        if (pickedFile!=null){
          _image=File(pickedFile.path);
@@ -105,11 +123,60 @@ final picker=ImagePicker();
 
   }
 
+  */
+
   void _saveLang(){
     //Navigator.of(context).pop() ;
 
   }
 
+  void nextWord() async{
+    answerController.text="";
+    await {_saveupdate(_tasks[rndIndex![indexWork]])};
+
+    setState(() {
+      if (indexWork<leght-1){
+        indexWork++;
+      }else{indexWork=0;}
+    });
+  }
+
+  void backWord() {
+    answerController.text="";
+    setState(() {
+      if(indexWork==0){indexWork=leght-1;}
+      else{indexWork--;}
+    });
+
+  }
+
+  void noKhowAnswer() {
+    if( _tasks[rndIndex![indexWork]].rating>1){_tasks[rndIndex![indexWork]].rating=_tasks[rndIndex![indexWork]].rating-2;}
+    if( _tasks[rndIndex![indexWork]].rating==1){_tasks[rndIndex![indexWork]].rating--;}
+
+
+      answerController.text = answer;
+
+  }
+
+    void checkAnswer(BuildContext context){
+    if(answer==answerController.text){
+      Fluttertoast.showToast(msg: 'ok!',
+        toastLength:Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.greenAccent, );
+      if(_tasks[rndIndex![indexWork]].rating<10){ _tasks[rndIndex![indexWork]].rating++;}
+
+
+     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ok")));
+      nextWord();}else{
+      if(_tasks[rndIndex![indexWork]].rating>0){ _tasks[rndIndex![indexWork]].rating--;}
+      Fluttertoast.showToast(msg: 'no!',
+        toastLength:Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.red, );
+    }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -122,19 +189,27 @@ final picker=ImagePicker();
 
 
         if (_langWorkout=="eng"){
-          return Text(_tasks[rndIndex[indexWork]].english);
+          question=_tasks[rndIndex![indexWork]].english;
+          answer=_tasks[rndIndex![indexWork]].russia;
+          return Text(question);
         }else if(_langWorkout=="rus"){
-          Text(_tasks[rndIndex[indexWork]].russia);
+          question=_tasks[rndIndex![indexWork]].russia;
+          answer=_tasks[rndIndex![indexWork]].english;
+          Text(question);
         }else if(_langWorkout=="eng/rus") {
           Random rnd = Random();
           if (rnd.nextInt(2) == 0) {
-            return Text(_tasks[rndIndex[indexWork]].russia);
+            question=_tasks[rndIndex![indexWork]].russia;
+            answer=_tasks[rndIndex![indexWork]].english;
+            return Text(question);
           }
           else {
-            return Text(_tasks[rndIndex[indexWork]].english);
+            question=_tasks[rndIndex![indexWork]].english;
+            answer=_tasks[rndIndex![indexWork]].russia;
+            return Text(question);
           }
         }
-        return Text(_tasks[rndIndex[indexWork]].russia);
+        return Text(_tasks[rndIndex![indexWork]].russia);
 
       }
     }
@@ -258,30 +333,48 @@ final picker=ImagePicker();
 
 
               IconButton(icon: Icon(Icons.edit), onPressed: (){}),
-              Text(indexWork.toString())
+              Text(indexWork.toString()),
+              Text('  rating='),
+              Text(_tasks[rndIndex![indexWork]].rating.toString())
             ],
           ),
          Container(height: 100,),
          Row(
            children: [
-             Expanded(child: TextField()),
-             ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.wb_incandescent_outlined), label: Text('?'))
+             Expanded(child: TextField(
+               controller: answerController,
+             )),
+             ElevatedButton.icon(onPressed: (){
+               checkAnswer(context);
+             },
+
+                 icon: Icon(Icons.wb_incandescent_outlined), label: Text('?'))
            ],
          ),
           Container(height: 100,),
          Row(
            children: [
              ElevatedButton(onPressed: (){
-               setState(() {
-                 if (indexWork<leght-1){
-                   indexWork++;
-                 }
-               });
-             }, child: Text("Знаю")),
+               _tasks[rndIndex![indexWork]].rating=ratingMax;
+               nextWord();  },
+              child: Text("Знаю")),
              Container(width: 150,),
-             ElevatedButton(onPressed: (){}, child: Text("НеЗнаю")),
+             ElevatedButton(onPressed: (){
+               noKhowAnswer();
+             },
+                 child: Text("НеЗнаю")),
            ],
          ),
+          Row(
+            children: [
+              ElevatedButton(onPressed: (){
+             backWord(); },
+                  child: Text("назад")),
+              Container(width: 150,),
+              ElevatedButton(onPressed: (){ nextWord();},
+                  child: Text("вперед")),
+            ],
+          ),
          /* Row(
             children:[
              Container(
@@ -295,7 +388,7 @@ final picker=ImagePicker();
 
           */
 
-          Container(width: 300, height: 200,
+         /* Container(width: 300, height: 200,
             child:_image2==null?
             Text('w'): Image.file(_image2),
             // ,
@@ -304,6 +397,8 @@ final picker=ImagePicker();
 
                    //
           )
+
+          */
 
         ],
       )
@@ -314,5 +409,18 @@ final picker=ImagePicker();
     throw UnimplementedError();
   }
 
+  }
+  class RefreshModel extends ChangeNotifier{
+  bool _update= false;
+  int _counter=0;
+  bool get update => _update;
+  void set update(bool value) {
+    _update=value;
+    _counter++;
+  notifyListeners();
+  }
+  void counter(){
+    _counter++;
+  }
   }
 

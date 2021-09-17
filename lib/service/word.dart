@@ -11,20 +11,21 @@ class Word {
    int dataAdd=0;
    int rating=0;
    int lesson=0;
-   bool complete;
+   bool complete=false;
 
 
 
 
-  Word ({this.id, this.english, this.russia, this.transcr, this.complete, this.dataAdd, this.rating, this.lesson});
+  Word ( { required this.id, required this.english, required this.russia, required this.transcr, required this.complete, required this.dataAdd,required this.rating});
 
   Word.fromJson (Map<String, dynamic> data ){
-    english=data["inglish"];
-    russia= data["russia"];
-    transcr=data["transcr"];
-    dataAdd=data["dataAdd"];
+    english=data["inglish"]==null?" ":data["inglish"];
+    russia= data["russia"]==null?" ":data["russia"];
+   transcr=data["transcr"]==null?" ":data["transcr"];
+   complete=data["complete"]==null? false:data["complete"];
+    dataAdd=data["dataAdd"]==null?" ":data["dataAdd"];
     rating=data["rating"];
-    lesson=data["lesson"];
+    //lesson=data["lesson"];
   }
 
 
@@ -39,7 +40,7 @@ class Word {
       "lesson": lesson,
     "complete": complete
     };
-    if (id!=null){map["id"]=id;}
+   // if (id!=null){map["id"]=id;}
     return map;
  }
 
@@ -51,7 +52,7 @@ class Word {
       transcr: map["transcr"],
       dataAdd: map["dataAdd"],
       rating: map["rating"],
-      lesson: map["lesson"],
+     // lesson: map["lesson"],
       complete: map["complete"]==1
     );
  }

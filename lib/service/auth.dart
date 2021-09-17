@@ -6,21 +6,21 @@ import 'package:flutter_app1/service/user.dart';
 class AuthService{
 
   final FirebaseAuth  _fAuth = FirebaseAuth.instance;
-  Future <User1> signInWhithEmailAndPassword(String email, String password) async {
+  Future <User1?> signInWhithEmailAndPassword(String email, String password) async {
 
     try {
 
-      UserCredential result =await _fAuth.signInWithEmailAndPassword(email: email, password: password);
-     User user =result.user;
+      UserCredential? result =await _fAuth.signInWithEmailAndPassword(email: email, password: password);
+     User user =result.user!;
      return User1.fromFirebase(user);
     }
     catch(e){}
   }
-  Future <User1> registerWhithEmailAndPassword(String email, String password) async {
+  Future <User1?> registerWhithEmailAndPassword(String email, String password) async {
 
     try {
-      UserCredential result =await _fAuth.createUserWithEmailAndPassword(email: email, password: password);
-      User user =result.user;
+      UserCredential? result =await _fAuth.createUserWithEmailAndPassword(email: email, password: password);
+      User user =result.user!;
       return User1.fromFirebase(user);
     }
     catch(e){}
@@ -31,7 +31,7 @@ class AuthService{
   }
 
   Stream<User1> get curentUser{
-    return _fAuth.authStateChanges().map((User user)=> user!=null ? User1.fromFirebase(user):null);
+    return _fAuth.authStateChanges().map((User? user)=>User1.fromFirebase(user!));
   }
 
 }
